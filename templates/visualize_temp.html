@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>  
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=David+Libre&display=swap" rel="stylesheet" />
+        <link href="{{ url_for('static', filename='visualize_temp.css') }}" rel="stylesheet"/>
+        <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!-- <script type="text/javascript">alert({{error}})</script> -->
+    </head>
+    <body>
+        <div class="background">
+            <div class="top"></div>
+            <div class="side_bar"></div>
+            <span class="title">VizApp</span>
+            <!-- fixed -->
+            <form method="POST" enctype="multipart/form-data" action="/visualize">
+                <p><input class="file" type="file" name="file[]" multiple=""></p>
+
+                <span class="txt_feature">Feature Extractor</span>
+                <select class="feature" name="feature">
+                    {% for feature in feature_list %}
+                    <option value = "{{feature}}">{{feature}}</option>
+                    {% endfor %}
+                </select>
+                <span class="txt_dimension">Dimension Reducer</span>
+                <select class="reducer" name="reducer">
+                    {% for reducer in reducer_list %}
+                        <option value = "{{reducer}}">{{reducer}}</option>   
+                    {% endfor %}
+                </select>
+                <span class="txt_n_neighbors">n_neighbors(2~200)</span>
+                <span class="txt_min_dist">min_dist(0.0~0.99)</span>
+                <p class="txt_umap_box">(Hyperparameter for umap)</p>
+                <div class="umap_box">
+                    <input class="n_neighbors" name="n_neighbors" type="number" value="10" min="2" max="200"></input>
+                    <input class="min_dist" name="min_dist" type="number" value="0.1" min="0.0" max="0.99" step="0.01"></input>
+                </div>
+                <span class="txt_odmodels">Outlier Detection Model</span>
+                <select class="odmodels" name="odmodels">
+                    {% for odmodels in od_list %}
+                    <option value = "{{odmodels}}">{{odmodels}}</option>
+                    {% endfor %}
+                </select>
+                <span class="txt_vis_dim">2D or 3D</span>
+                <select class="vis_dim" name="vis_dim">
+                    {% for vis_dim in vis_dim_list %}
+                    <option value = "{{vis_dim}}">{{vis_dim}}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn_done" type="submit">Done</button>
+            </form>
+        </div>
+    </body>
+</html>

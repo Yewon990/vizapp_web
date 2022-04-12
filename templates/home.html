@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=David+Libre&display=swap" rel="stylesheet" />
+        <link href="{{ url_for('static', filename='home.css') }}" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="background">
+            <span class="title">VizApp</span>
+            <form method="GET" action="/feature">
+                <button class="feature_btn" type="submit"><img src="../static/images/feature_btn.png"></button>              
+            </form>
+            <form method="GET" action="/visualize">
+                <button class="start_btn" type="submit"><img src="../static/images/start_btn.png"></button>
+            </form>
+        </div>
+        </body>
+</html>
