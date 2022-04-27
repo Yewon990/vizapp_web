@@ -19,6 +19,7 @@ from outlier_detection import OD
 from dim_reduction import DR
 from edit_json import Edit_Json
 from make_seg_video import Make_Video
+import get_frame_count
 
 import feature
 import cv2
@@ -78,6 +79,12 @@ def feature_extraction(filename, feature):
     print("=-=-=-=-=-=-=-=-=-=-=-= feature extraction start =-=-=-=-=-=-=-=-=-=-=-=")
     features.FeatureExtract(filename, feature)
     print("=-=-=-=-=-=-=-=-=-=-=-= feature extraction end =-=-=-=-=-=-=-=-=-=-=-=")
+def hashing_filename(filename):
+    old_video_file = UPLOAD_FOLDER+filename
+    num_frames, fps = get_frame_count.get_frame_count(old_video_file)
+    new_video_file = UPLOAD_FOLDER+filename.split('.')[0] + '(num_frames:' + str(num_frames) + ', fps:' + str(fps) +')' + '.mp4'
+    os.rename(old_video_file, new_video_file)
+    return new_video_file
 
 @server.route('/visualize', methods=['GET','POST'])
 def visualize_temp():
@@ -148,11 +155,22 @@ def run_extraction(file_list):
     filename = secure_filename(file_list[0].filename)
     print('file name', filename)
     video_name = filename.split('.mp4')[0]
-    print('video_name', video_name)
+    print('video_name', video_name)    
+    
+    dir_list = os.listdir(server.config['UPLOAD_FOLDER'])
+    is_exist = False
+    for string in dir_list:
+        if video_name in string:
+            is_exist = True
+        
     # video, feature, segment 있는지 모두 확인
-    if os.path.exists(os.path.join(server.config['UPLOAD_FOLDER'], filename)) == False:
+    if is_exist == False:
         try:
             file_list[0].save(os.path.join(server.config['UPLOAD_FOLDER'], filename))
+            filename = hashing_filename(filename)
+            print('new file name', filename)
+            video_name = filename.split('.mp4')[0]
+            print('video_name', video_name)
         except Exception as e:
             print(e)
     if options['feature'] == 'I3D' or 'SlowFast':
